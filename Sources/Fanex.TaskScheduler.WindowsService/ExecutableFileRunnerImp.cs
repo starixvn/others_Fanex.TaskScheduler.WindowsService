@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Fanex.MailDelivery.Client.Messages;
+using Newtonsoft.Json;
 
 namespace Fanex.TaskScheduler.WindowsService
 {
@@ -13,15 +15,20 @@ namespace Fanex.TaskScheduler.WindowsService
             this.logService = logService;
         }
 
-        public int Execute(string executableFile)
+        public JobResultMessage Execute(string executableFile)
         {
             Process process = null;
+            JobResultMessage job = new JobResultMessage()
+            {
+                JobStatus = MailDelivery.Client.Enumerations.JobStatus.Success
+            };            
+                
             try
             {
                 var startInfo = CreateProcessStartInfo(executableFile);
                 process = Process.Start(startInfo);
-                process.WaitForExit();
-                return process.ExitCode;
+                job = DeserializeMailObject(process);
+                process.WaitForExit(1);                
             }
             catch (Exception exception)
             {
@@ -32,7 +39,7 @@ namespace Fanex.TaskScheduler.WindowsService
                 CloseNotNullProcess(process);
             }
 
-            return int.MaxValue;
+            return job;
         }
 
         private ProcessStartInfo CreateProcessStartInfo(string executableFile)
@@ -48,6 +55,13 @@ namespace Fanex.TaskScheduler.WindowsService
                 WindowStyle = ProcessWindowStyle.Hidden,
                 WorkingDirectory = Path.GetDirectoryName(executableFile)
             };
+        }
+
+        private JobResultMessage DeserializeMailObject(Process process)
+        {
+            var output = process.StandardOutput.ReadToEnd();
+            logService.Log(output);
+            return JsonConvert.DeserializeObject<JobResultMessage>(output);
         }
 
         private void CloseNotNullProcess(Process process)

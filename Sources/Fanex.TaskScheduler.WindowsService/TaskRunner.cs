@@ -19,7 +19,7 @@ namespace Fanex.TaskScheduler.WindowsService
         {
             executableFileRunner = SimpleInjectorContainer.Container.GetInstance<ExecutableFileRunner>();
             executableFileFinder = SimpleInjectorContainer.Container.GetInstance<ExecutableFileFinder>();
-            maintenanceService = SimpleInjectorContainer.Container.GetInstance<IMaintenanceService>();
+            maintenanceService = SimpleInjectorContainer.Container.GetInstance<IMaintenanceService>();            
         }
 
         protected override JobResultMessage Run(Schedule schedule, IJobExecutionContext jobContext)
@@ -34,10 +34,11 @@ namespace Fanex.TaskScheduler.WindowsService
             var executableFile = executableFileFinder.GetExecutableFile(schedule.Id);
             var result = executableFileRunner.Execute(executableFile);
 
-            return new JobResultMessage
+             return new JobResultMessage
             {
-                JobStatus = result == 0 ? JobStatus.Success : JobStatus.JobFailed,
-                Schedule = schedule
+                JobStatus = result.JobStatus,
+                Schedule = schedule,
+                Mail = result.Mail
             };
         }
 
