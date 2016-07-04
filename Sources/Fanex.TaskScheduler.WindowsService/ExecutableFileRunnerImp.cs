@@ -59,8 +59,7 @@ namespace Fanex.TaskScheduler.WindowsService
 
         private JobResultMessage DeserializeMailObject(Process process)
         {
-            var output = process.StandardOutput.ReadToEnd();
-            logService.Log(output);
+            var output = process.StandardOutput.ReadToEnd();            
             return JsonConvert.DeserializeObject<JobResultMessage>(output);
         }
 
