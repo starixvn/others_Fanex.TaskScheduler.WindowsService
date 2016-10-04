@@ -21,22 +21,16 @@ namespace Fanex.TaskScheduler.WindowsService
             JobResultMessage job = new JobResultMessage()
             {
                 JobStatus = MailDelivery.Client.Enumerations.JobStatus.Success
-            };            
-                
-            try
+            };
+
+            var startInfo = CreateProcessStartInfo(executableFile);
+            process = Process.Start(startInfo);
+            job = DeserializeMailObject(process);
+            process.WaitForExit(1);
+
+            if (job.JobStatus == MailDelivery.Client.Enumerations.JobStatus.DataIsNotReady)
             {
-                var startInfo = CreateProcessStartInfo(executableFile);
-                process = Process.Start(startInfo);
-                job = DeserializeMailObject(process);
-                process.WaitForExit(1);                
-            }
-            catch (Exception exception)
-            {
-                logService.Log(exception);
-            }
-            finally
-            {
-                CloseNotNullProcess(process);
+                throw new Exception("DataIsNotReady");
             }
 
             return job;
@@ -61,6 +55,11 @@ namespace Fanex.TaskScheduler.WindowsService
         {
             var output = process.StandardOutput.ReadToEnd();
             int indexOfSchedule = output.IndexOf("{\"Schedule\":");
+            if (indexOfSchedule < 0)
+            {
+                return JsonConvert.DeserializeObject<JobResultMessage>(output);
+            }
+
             string jobResult = output.Substring(indexOfSchedule, output.Length - indexOfSchedule);
             return JsonConvert.DeserializeObject<JobResultMessage>(jobResult);
         }
