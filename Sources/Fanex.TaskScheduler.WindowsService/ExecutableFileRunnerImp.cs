@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using Fanex.MailDelivery.Client.Enumerations;
 using Fanex.MailDelivery.Client.Messages;
 using Newtonsoft.Json;
 
@@ -20,7 +21,7 @@ namespace Fanex.TaskScheduler.WindowsService
             Process process = null;
             JobResultMessage job = new JobResultMessage()
             {
-                JobStatus = MailDelivery.Client.Enumerations.JobStatus.Success
+                JobStatus = JobStatus.Success
             };
 
             var startInfo = CreateProcessStartInfo(executableFile);
@@ -28,8 +29,9 @@ namespace Fanex.TaskScheduler.WindowsService
             job = DeserializeMailObject(process);
             process.WaitForExit(1);
 
-            if (job.JobStatus == MailDelivery.Client.Enumerations.JobStatus.DataIsNotReady)
+            if (job.JobStatus == JobStatus.DataIsNotReady)
             {
+                job.JobStatus = JobStatus.Running;
                 throw new Exception("DataIsNotReady");
             }
 
@@ -54,7 +56,7 @@ namespace Fanex.TaskScheduler.WindowsService
         private JobResultMessage DeserializeMailObject(Process process)
         {
             var output = process.StandardOutput.ReadToEnd();
-            int indexOfSchedule = output.IndexOf("{\"Schedule\":");
+            int indexOfSchedule = output.IndexOf("{\"Schedule\":", StringComparison.Ordinal);
             if (indexOfSchedule < 0)
             {
                 return JsonConvert.DeserializeObject<JobResultMessage>(output);

@@ -6,12 +6,16 @@ namespace Fanex.TaskScheduler.WindowsService
     {
         public void Log(string message)
         {
-            Fanex.Logging.LogService.Info(message);
+            Logging.LogService.Info(message);
         }
 
         public void Log(Exception exception)
         {
-            Fanex.Logging.LogService.Error(exception.Message, exception);
+            var message = exception.Message;
+            if (!message.Contains("DataIsNotReady"))
+            {
+                Logging.LogService.Error(exception.Message, exception);
+            }
         }
     }
 }
