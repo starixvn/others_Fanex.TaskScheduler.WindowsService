@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Fanex.MailDelivery.Client.Enumerations;
-using Fanex.MailDelivery.Client.Messages;
+using Fanex.MailDelivery.Core.Models;
 using Newtonsoft.Json;
 
 namespace Fanex.TaskScheduler.WindowsService
@@ -16,10 +15,10 @@ namespace Fanex.TaskScheduler.WindowsService
             this.logService = logService;
         }
 
-        public JobResultMessage Execute(string executableFile)
+        public JobMessage Execute(string executableFile)
         {
             Process process = null;
-            JobResultMessage job = new JobResultMessage()
+            JobMessage job = new JobMessage()
             {
                 JobStatus = JobStatus.Success
             };
@@ -53,17 +52,17 @@ namespace Fanex.TaskScheduler.WindowsService
             };
         }
 
-        private JobResultMessage DeserializeMailObject(Process process)
+        private JobMessage DeserializeMailObject(Process process)
         {
             var output = process.StandardOutput.ReadToEnd();
             int indexOfSchedule = output.IndexOf("{\"Schedule\":", StringComparison.Ordinal);
             if (indexOfSchedule < 0)
             {
-                return JsonConvert.DeserializeObject<JobResultMessage>(output);
+                return JsonConvert.DeserializeObject<JobMessage>(output);
             }
 
             string jobResult = output.Substring(indexOfSchedule, output.Length - indexOfSchedule);
-            return JsonConvert.DeserializeObject<JobResultMessage>(jobResult);
+            return JsonConvert.DeserializeObject<JobMessage>(jobResult);
         }
 
         private void CloseNotNullProcess(Process process)

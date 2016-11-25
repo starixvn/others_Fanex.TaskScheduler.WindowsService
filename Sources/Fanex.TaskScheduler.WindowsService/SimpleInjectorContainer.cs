@@ -18,8 +18,8 @@ namespace Fanex.TaskScheduler.WindowsService
         {
             Container.Register<LogService, LogServiceImp>(Lifestyle.Transient);
             Container.Register<ExecutableFileRunner, ExecutableFileRunnerImp>(Lifestyle.Transient);
-            Container.Register<ExecutableFileFinder, ExecutableFileFinderImp>(Lifestyle.Transient);
-            Container.Register<IMaintenanceService, MaintenanceService>(Lifestyle.Transient);
+            Container.Register<ExecutableFileFinder, ExecutableFileFinderImp>(Lifestyle.Transient);            
+            Container.Register<IUMControlAdapter, UMControlAdapter>(Lifestyle.Transient);
         }
     }
 }
