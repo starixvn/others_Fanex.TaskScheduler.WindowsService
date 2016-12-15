@@ -1,9 +1,9 @@
-﻿using Fanex.MailDelivery.Client.Messages;
+﻿using Fanex.MailDelivery.Core.Models;
 
 namespace Fanex.TaskScheduler.WindowsService
 {
     public interface ExecutableFileRunner
     {
-        JobResultMessage Execute(string executableFile);
+        JobMessage Execute(string executableFile);
     }
 }

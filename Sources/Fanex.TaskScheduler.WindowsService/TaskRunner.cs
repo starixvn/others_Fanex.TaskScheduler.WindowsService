@@ -1,7 +1,6 @@
-﻿using Fanex.MailDelivery.Client.Enumerations;
+﻿using System;
 using Fanex.MailDelivery.Client.Jobs;
-using Fanex.MailDelivery.Client.Messages;
-using Fanex.MailDelivery.Client.Models;
+using Fanex.MailDelivery.Core.Models;
 using ONEbook.UM.Services;
 using Quartz;
 
@@ -13,28 +12,28 @@ namespace Fanex.TaskScheduler.WindowsService
 
         private readonly ExecutableFileFinder executableFileFinder;
 
-        private readonly IMaintenanceService maintenanceService;
+        private readonly IUMControlAdapter maintenanceService;
 
         public TaskRunner()
         {
             executableFileRunner = SimpleInjectorContainer.Container.GetInstance<ExecutableFileRunner>();
             executableFileFinder = SimpleInjectorContainer.Container.GetInstance<ExecutableFileFinder>();
-            maintenanceService = SimpleInjectorContainer.Container.GetInstance<IMaintenanceService>();            
+            maintenanceService = SimpleInjectorContainer.Container.GetInstance<IUMControlAdapter>();
         }
 
-        protected override JobResultMessage Run(Schedule schedule, IJobExecutionContext jobContext)
+        protected override JobMessage Run(Schedule schedule, IJobExecutionContext jobContext)
         {
-            return maintenanceService.IsUnderMaintenance()
-                ? RunWhenMaintenance(schedule)
-                : RunWhenNoMaintenance(schedule);
+            return maintenanceService.GetUnderMaintenanceTime().IsUnderMaintenanceTime
+                    ? RunWhenMaintenance(schedule)
+                    : RunWhenNoMaintenance(schedule);
         }
 
-        private JobResultMessage RunWhenNoMaintenance(Schedule schedule)
+        private JobMessage RunWhenNoMaintenance(Schedule schedule)
         {
             var executableFile = executableFileFinder.GetExecutableFile(schedule.Id);
             var result = executableFileRunner.Execute(executableFile);
 
-             return new JobResultMessage
+            return new JobMessage
             {
                 JobStatus = result.JobStatus,
                 Schedule = schedule,
@@ -42,9 +41,9 @@ namespace Fanex.TaskScheduler.WindowsService
             };
         }
 
-        private JobResultMessage RunWhenMaintenance(Schedule schedule)
+        private JobMessage RunWhenMaintenance(Schedule schedule)
         {
-            return new JobResultMessage
+            return new JobMessage
             {
                 JobStatus = JobStatus.JobFailed,
                 Schedule = schedule

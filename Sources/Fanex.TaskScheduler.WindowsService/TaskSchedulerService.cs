@@ -1,4 +1,4 @@
-﻿using Fanex.MailDelivery.Client.Handlers;
+﻿using Fanex.MailDelivery.Client;
 
 namespace Fanex.TaskScheduler.WindowsService
 {
