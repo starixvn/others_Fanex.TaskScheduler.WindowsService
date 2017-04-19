@@ -28,10 +28,15 @@ namespace Fanex.TaskScheduler.WindowsService
             job = DeserializeMailObject(process);
             process.WaitForExit(1);
 
-            if (job.JobStatus == JobStatus.DataIsNotReady)
+            if (job.JobStatus == JobStatus.DataIsNotReady && string.IsNullOrEmpty(job.TaskLog.Message))
             {
                 job.JobStatus = JobStatus.Running;
                 throw new Exception("DataIsNotReady");
+            }
+            if (job.JobStatus == JobStatus.DataIsNotReady && !string.IsNullOrEmpty(job.TaskLog.Message))
+            {
+                job.JobStatus = JobStatus.Running;
+                throw new Exception(job.TaskLog.Message);
             }
 
             return job;
