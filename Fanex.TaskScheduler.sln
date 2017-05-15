@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4DA4BBC7-B1D9-439F-A5A3-38203F50ABAA}"
 EndProject
@@ -50,5 +50,8 @@ Global
 		{52EE8703-1A53-48A1-BFAD-CA9F839E7249} = {4DA4BBC7-B1D9-439F-A5A3-38203F50ABAA}
 		{9A283337-F8A5-45A1-9638-8F9F3AF8062F} = {E2549814-E608-4CF6-8F53-8679D6B5EC0E}
 		{0F4DB1BB-B0ED-4475-BA17-A498C219AC99} = {4DA4BBC7-B1D9-439F-A5A3-38203F50ABAA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal
