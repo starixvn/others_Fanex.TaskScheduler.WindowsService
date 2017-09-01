@@ -61,6 +61,10 @@ namespace Fanex.TaskScheduler.WindowsService
         {
             var output = process.StandardOutput.ReadToEnd();
             int indexOfSchedule = output.IndexOf("{\"Schedule\":", StringComparison.Ordinal);
+            if(indexOfSchedule < 0)
+            {
+                indexOfSchedule = output.IndexOf("{\r\n  \"Schedule\":", StringComparison.Ordinal);
+            }
             if (indexOfSchedule < 0)
             {
                 return JsonConvert.DeserializeObject<JobMessage>(output);
