@@ -22,6 +22,8 @@ namespace Fanex.TaskScheduler.WindowsService
             Process process = null;
             JobMessage job;
 
+            Logging.LogService.Info($"executableFile: {executableFile}");
+
             var startInfo = CreateProcessStartInfo(executableFile);
             process = Process.Start(startInfo);
             job = DeserializeMailObject(process, executableFile);
