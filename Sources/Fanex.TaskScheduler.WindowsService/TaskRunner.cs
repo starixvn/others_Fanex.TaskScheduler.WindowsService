@@ -16,9 +16,9 @@ namespace Fanex.TaskScheduler.WindowsService
 
         public TaskRunner()
         {
-            executableFileRunner = SimpleInjectorContainer.Container.GetInstance<ExecutableFileRunner>();
-            executableFileFinder = SimpleInjectorContainer.Container.GetInstance<ExecutableFileFinder>();
-            maintenanceService = SimpleInjectorContainer.Container.GetInstance<IUMControlAdapter>();
+            executableFileRunner = RegisterService.Container.GetInstance<ExecutableFileRunner>();
+            executableFileFinder = RegisterService.Container.GetInstance<ExecutableFileFinder>();
+            maintenanceService = RegisterService.Container.GetInstance<IUMControlAdapter>();
         }
 
         protected override JobMessage Run(Schedule schedule, IJobExecutionContext jobContext)
