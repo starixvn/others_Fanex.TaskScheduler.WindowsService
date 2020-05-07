@@ -1,9 +1,9 @@
-﻿using System.Configuration;
-using System.Net;
-using System.Timers;
-using Fanex.Data;
+﻿using Fanex.Data;
 using Fanex.MailDelivery.Client;
 using ONEbook.UM.Services;
+using System.Configuration;
+using System.Net;
+using System.Timers;
 
 namespace Fanex.TaskScheduler.WindowsService
 {
