@@ -1,9 +1,8 @@
-﻿using System.Configuration;
-using Fanex.Data;
+﻿using Fanex.Data;
 using Fanex.Data.OldConnectionStringProvider;
-using ONEbook.UM.Services;
-using ONEbook.UM.Services.Impl;
 using SimpleInjector;
+using System;
+using System.Configuration;
 
 namespace Fanex.TaskScheduler.WindowsService
 {
@@ -12,6 +11,7 @@ namespace Fanex.TaskScheduler.WindowsService
         static RegisterService()
         {
             Container = new Container();
+
             Register();
         }
 
@@ -21,8 +21,18 @@ namespace Fanex.TaskScheduler.WindowsService
         {
             Container.Register<LogService, LogServiceImp>(Lifestyle.Transient);
             Container.Register<ExecutableFileRunner, ExecutableFileRunnerImp>(Lifestyle.Transient);
-            Container.Register<ExecutableFileFinder, ExecutableFileFinderImp>(Lifestyle.Transient);            
-            Container.Register<IUMControlAdapter, UMControlAdapter>(Lifestyle.Transient);
+            Container.Register<ExecutableFileFinder, ExecutableFileFinderImp>(Lifestyle.Transient);
+            Container.Register(() => new TaskSchedulerService());
+
+            try
+            {
+                OnebookUMInitializer.InitializeUMClientManager();
+                OnebookUMInitializer.RegisterSimpleInjector(Container);
+            }
+            catch (Exception ex)
+            {
+                Fanex.Logging.LogService.Error("Fanex.TaskScheduler.WindowsService", ex);
+            }
         }
 
         public static void ConfigureFanexData()

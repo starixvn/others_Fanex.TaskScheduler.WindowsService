@@ -1,6 +1,5 @@
 ﻿using Fanex.Data;
 using Fanex.MailDelivery.Client;
-using ONEbook.UM.Services;
 using System.Configuration;
 using System.Net;
 using System.Timers;
@@ -44,11 +43,6 @@ namespace Fanex.TaskScheduler.WindowsService
         private void Execute()
         {
             isOnProcessing = true;
-            var um = RegisterService.Container.GetInstance<IUMControlAdapter>();
-            if (!um.GetUnderMaintenanceTime().IsUnderMaintenanceTime)
-            {
-                CheckIn();
-            }
 
             isOnProcessing = false;
         }
