@@ -1,5 +1,4 @@
-﻿using System;
-using Fanex.MailDelivery.Client.Jobs;
+﻿using Fanex.MailDelivery.Client.Jobs;
 using Fanex.MailDelivery.Core.Models;
 using ONEbook.UM.Services;
 using Quartz;
@@ -12,17 +11,18 @@ namespace Fanex.TaskScheduler.WindowsService
 
         private readonly ExecutableFileFinder executableFileFinder;
 
-        private readonly IUMControlAdapter maintenanceService;
+        private readonly IMaintenanceService maintenanceService;
 
         public TaskRunner()
         {
             executableFileRunner = RegisterService.Container.GetInstance<ExecutableFileRunner>();
             executableFileFinder = RegisterService.Container.GetInstance<ExecutableFileFinder>();
-            maintenanceService = RegisterService.Container.GetInstance<IUMControlAdapter>();
+            maintenanceService = RegisterService.Container.GetInstance<IMaintenanceService>();
         }
 
         protected override JobMessage Run(Schedule schedule, IJobExecutionContext jobContext)
         {
+            //return RunWhenNoMaintenance(schedule);
             return maintenanceService.GetUnderMaintenanceTime().IsUnderMaintenanceTime
                     ? RunWhenMaintenance(schedule)
                     : RunWhenNoMaintenance(schedule);
