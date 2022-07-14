@@ -247,9 +247,6 @@
     <Content Include="AppConfig\Fanex.TaskScheduler.WindowsService.PRO-22.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="AppConfig\Fanex.TaskScheduler.WindowsService.PRO-71.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
