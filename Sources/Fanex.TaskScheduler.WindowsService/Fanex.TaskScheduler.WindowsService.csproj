@@ -222,12 +222,6 @@
     <Content Include="AppConfig\Fanex.TaskScheduler.WindowsService.PRO.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\PRO\DBMA.bodb_Maintenance.bodbAdminNet.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\TEST\DBMA.bodb_Maintenance.bodbAdminNet.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="deployment.ignore">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
