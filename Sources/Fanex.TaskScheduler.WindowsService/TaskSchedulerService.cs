@@ -1,7 +1,4 @@
-﻿using Fanex.Data;
-using Fanex.MailDelivery.Client;
-using System.Configuration;
-using System.Net;
+﻿using Fanex.MailDelivery.Client;
 using System.Timers;
 
 namespace Fanex.TaskScheduler.WindowsService
@@ -18,7 +15,6 @@ namespace Fanex.TaskScheduler.WindowsService
             Register();
             timer.Start();
             MailClientHandler.Start();
-            RegisterService.ConfigureFanexData();
         }
 
         public void Stop()
@@ -45,38 +41,6 @@ namespace Fanex.TaskScheduler.WindowsService
             isOnProcessing = true;
 
             isOnProcessing = false;
-        }
-
-        private void CheckIn()
-        {
-            var serviceName = ConfigurationManager.AppSettings["ServiceName"];
-            var criteria = new ServiceMonitoringCheckInCriteria
-            {
-                Interval = Interval,
-                IPServer = GetLocalIP(),
-                OrderBy = 2,
-                ServiceName = serviceName
-            };
-
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(criteria.GetSpParams());
-            }
-        }
-
-        private string GetLocalIP()
-        {
-            var ip = string.Empty;
-            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
-            foreach (IPAddress addr in localIPs)
-            {
-                if (addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                {
-                    ip = addr.ToString();
-                }
-            }
-
-            return ip;
         }
     }
 }

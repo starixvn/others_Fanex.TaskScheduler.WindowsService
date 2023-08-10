@@ -1,8 +1,5 @@
-﻿using Fanex.Data;
-using Fanex.Data.OldConnectionStringProvider;
-using SimpleInjector;
+﻿using SimpleInjector;
 using System;
-using System.Configuration;
 
 namespace Fanex.TaskScheduler.WindowsService
 {
@@ -33,16 +30,6 @@ namespace Fanex.TaskScheduler.WindowsService
             {
                 Fanex.Logging.LogService.Error("Fanex.TaskScheduler.WindowsService", ex);
             }
-        }
-
-        public static void ConfigureFanexData()
-        {
-            var storedProcedurePath = ConfigurationManager.AppSettings["StoredProcedurePath"];
-            DbSettingProviderManager
-                .StartNewSession()
-                .Use(new OldConnectionStringProvider())
-                .UseDefaultDbSettingProvider($@"~/{storedProcedurePath}")
-                .Run();
         }
     }
 }
